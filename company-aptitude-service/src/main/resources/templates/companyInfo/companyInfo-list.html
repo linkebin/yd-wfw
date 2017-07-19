@@ -1,0 +1,191 @@
+﻿
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title></title>
+    <script th:src="@{jquery/jquery-1.9.0.min.js}" type="text/javascript"></script>
+    <link th:href="@{ligerUI/skins/Aqua/css/ligerui-all.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{ligerUI/skins/Gray/css/all.css}" rel="stylesheet"/>
+    <link th:href="@{ligerUI/skins/ligerui-icons.css}" rel="stylesheet" type="text/css" />
+
+    <script th:src="@{ligerUI/js/core/base.js}" type="text/javascript"></script>
+
+    <script th:src="@{ligerUI/js/ligerui.all.js}" type="text/javascript"></script>
+    <script th:src="@{ligerUI/js/core/init-obj.js}" type="text/javascript"></script>
+    <style type="text/css">
+    </style>
+    <script type="text/javascript" th:inline="javascript">
+        var gridMenu = null;
+        var jsonObj = {};
+        var companyInfoName=null;
+        //初始化布局
+        $(function () {
+            $("#container").ligerLayout({
+                leftWidth : 200
+            });
+            $("#tab1").ligerTab({
+                height:'100%'
+            });
+            navtab = $("#tab1").ligerGetTabManager();
+            initTabObj("tab1",'0');
+            tabs=_tabs;
+            /////////////////布局与数据初始化可以颠倒////////////////////////
+            /*
+             allowLeftResize 	Bool 	是否允许 左边可以调整大小 	true
+             allowRightResize 	Bool 	是否允许 右边可以调整大小 	true
+             allowTopResize 	Bool 	是否允许 头部可以调整大小 	true
+             allowBottomResize 	Bool 	是否允许 底部可以调整大小
+             */
+
+            //初始化表格
+            /*gridMenu = $.ligerMenu({
+                width:110,
+                items:[
+                    { id:'openClick', text:'修改数据', click:funcClick, icon:'/images/ico_pro.gif' },
+                    {line:true},
+                    { id:'deleteClick', text:'删除数据', click:funcClick, icon:'del' }
+                ]
+            });*/
+            /*<![CDATA[*//*
+            var message = [[${getAll}]];
+            var json_str = JSON.stringify(message);
+            var json_obj=JSON.parse(json_str);
+            /!*]]>*!/
+            jsonObj.Rows= json_obj;*/
+            loadDataCompanyInfo();
+        })
+        function itemclick(item)
+        {
+            var gmanager = $("#maingrid").ligerGetGridManager();
+            var row = gmanager.getSelectedRow()
+            if(item.id=='add'){
+                f_addTab1(item.id,'添加企业基本信息','/add?id=new',tabs);
+            }else if(item.id=='update'){
+                if (!row) {
+                    alert('请选择行');
+                    return;
+                }
+                f_addTab1(item.id,'更新企业基本信息','/add?id='+row.companyId,tabs);
+            }else if(item.id=='delete'){
+                if (!row) {
+                    alert('请选择行');
+                    return;
+                }else{
+                    if(confirm("您确认删除吗？")){
+                        var obj= dataGrid.getSelecteds();
+                        var ids ='';
+                        /*<![CDATA[*/
+                        for(var i=0;i<obj.length;i++){
+                            ids+=obj[i].companyId+",";
+                        }
+                        /*]]>*/
+                        if(ids!=''){
+                            $.ajax({
+                                type:'post',
+                                url:'/delete',
+                                data: {
+                                    ids:ids
+                                },
+                                dataType: 'json',
+                                success:function (data) {
+                                    location.reload();
+                                }
+                            });
+                        }
+                    }
+                }
+            }
+        }
+        function callBack()
+        {
+            navtab.removeTabItem('add');
+            navtab.removeTabItem('update');
+            dataGrid.reload();
+        }
+        function search() {
+            var data = $("#searchFrom").serializeArray();
+            loadDataCompanyInfo(data);
+        }
+        function reset() {
+            $("#searchFrom")[0].reset();
+        }
+        //获取model的对象
+        var dataGrid = null;
+        function loadDataCompanyInfo(data) {
+            dataGrid=$("#maingrid").ligerGrid({
+                columns :
+                        [
+                            /*{ display:'操作', width:60, oprcol:true,icon: 'del'},
+                            { display: '企业编号', name: 'companyId', minWidth:100},*/
+                            { display: '组织机构代码', name: 'oibc',minWidth:100},
+                            { display: '企业名称', name: 'name',minWidth:160},
+                            { display: '企业负责人', name: 'principal' },
+                            { display: '企业法定代表', name: 'legal' },
+                            { display: '企业法定代表人编号', name: 'legalIdNumber',minWidth:120},
+                            { display: '注册资本', name: 'signCapital',minWidth:100},
+                            { display: '营业执照注册号', name: 'licenseNumber',minWidth:100},
+                            { display: '企业类型', name: 'type',minWidth:100},
+                            { display: '电话', name: 'phone',minWidth:100 },
+                            { display: '邮箱', name: 'email' ,minWidth:140},
+                            { display: '传真', name: 'fax',minWidth:130 },
+                            { display: '邮政编码', name: 'postalcode' ,minWidth:100},
+                            { display: '地址', name: 'address' ,minWidth:275},
+                            { display: '企业成立时间', name: 'foundTime',minWidth:100 },
+                            { display: '创建时间', name: 'createTime',minWidth:200 ,type: "date"}
+                        ],
+                parms:data,
+                dataAction:"local",
+                url:'companyInfo/dataList',
+                checkbox: true,
+                usePager:true,
+                pageSize:"10",//分页页面大小
+                pageSizeOptions:[10,20,30],//可指定每页页面大小
+                isScroll:true,//是否出现滚动条
+                //添加toolbar
+                toolbar: { items: [
+                    { text: '增加', click: itemclick, icon: 'add',id: 'add' },
+                    { line: true },
+                    { text: '修改', click: itemclick, icon: 'modify',id : 'update' },
+                    { line: true },
+                    { text: '删除', click: itemclick, icon: 'delete',id : 'delete'}
+                ],
+                },
+            });
+        }
+    </script>
+    <style type="text/css">
+        * {
+            margin: 0px;
+            padding: 0px;
+        }
+        body {
+            padding: 5px;
+            margin: 0;
+            padding-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <div position="center" title="标题" >
+        <div id="tab1" style="width: 100%;overflow:hidden;height: 100%">
+            <div title="企业列表">
+                <form id="searchFrom">
+                    <div>
+                        <label>企业名称</label>
+                        <input  id="name" name="name" type="text"/>
+                        <label>企业类型</label>
+                        <input id="type" name="type" type="text"/>
+                        <input name="type" type="button" onclick="search()" value="搜索"/>
+                        <input name="type" type="button" onclick="reset()" value="重置"/>
+                    </div>
+                </form>
+                <div class="l-clear"></div>
+                <div id="maingrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

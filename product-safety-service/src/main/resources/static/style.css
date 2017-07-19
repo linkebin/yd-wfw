@@ -1,0 +1,13 @@
+.fsarea {margin-top: 15px;background:#fff;padding:10px;border-radius: 5px;margin-bottom: 36px;}
+.fsarea .fscxt {margin-top: 100px}
+.fsarea .toolbar {background:none;text-align: right;padding-right: 6px;padding-bottom: 2px;height: 100%;}
+.applyform table { background-color: #cde2f1; font-family: "宋体", arial, tahoma,serif; font-size: 12px; table-layout: fixed; border-collapse: collapse; border: solid 1px #A8CFEB; width: 100%;}
+.applyform table tbody { width: 100%;}
+.applyform table th { background-color: #f9f9f9; font-weight: normal; height: 32px; text-align: right; padding-left: 3px; width: 150px; border: solid #ddd 1px;color: #333;}
+.applyform table td { background-color: #ffffff; padding: 3px 10px 3px 3px; white-space: nowrap; border: solid #ddd 1px;}
+.applyform table td input[type=text] { line-height: 24px; height: 24px; width: 100%; padding-left: 3px; font-size: 12pt;}
+.applyform table td input[type=text]:focus { border: #FF0000 1px solid;}
+.applyform table td input[type=button] { line-height: 24px; height: 24px; width: 100%; padding-left: 3px; font-size: 12pt;}
+.applyform table td input[type=password] { line-height: 24px; height: 24px; width: 100%; padding-left: 3px; font-size: 12pt;}
+.applyform table td select { height: 24px; line-height: 20px; padding: 2px 0; width: 150px; font-size: 14px;}
+.applyform table td textarea { width: 99.5%; height: 100%; padding-left: 3px; padding-top: 3px; padding-right: 3px; font-size: 12pt; line-height: 24px;} .applyform table td textarea:focus { border: #FF0000 1px solid;}

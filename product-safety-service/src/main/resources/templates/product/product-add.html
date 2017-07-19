@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title></title>
+    <script src="../../jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <link href="../../ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="../../ligerUI/skins/Gray/css/all.css" rel="stylesheet"/>
+    <script src="../../ligerUI/js/ligerui.all.js" type="text/javascript"></script>
+    <link href="../../aptitude/base.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .btn{width: 60px; height: 25px; background: #89A8E3;
+            text-align: center; margin: 20px auto; border-radius: 2px; position: relative;}
+        .btn a{color: #000000; font-size: 12px; line-height: 25px;text-decoration:none;}
+        .fie li{width: 49%; float: left; margin-top: 8px;}
+    </style>
+</head>
+<body>
+
+<div style="margin-left: 5px;">
+
+    <form id="subAptitudeForm">
+        <input name="deleted"  type="hidden" value="0" />
+        <ul class="fie">
+            <li>
+                <ul>
+                    <li style="width: 100px; float: left;">产品名称：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="name" style="width: 300px;"   /></li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li style="width: 100px; float: left;">产品编号：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="number" style="width: 300px;"  /></li>
+                </ul>
+            </li>
+
+            <li style="width: 100%;">
+                <ul>
+                    <li style="width: 100px; ">产品介绍：</li>
+                    <li style="width: 300px;">
+                        <textarea name="introduce" cols="108" rows="6" ></textarea></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 100px; float: left;">规格型号：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="sam" style="width: 300px;"  /></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 100px; float: left;">企业机构代码：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="companyOibc" style="width: 300px;"  /></li>
+                </ul>
+            </li>
+
+            <li style="width: 100%;">
+                <div class="btn">
+                    <a href="javascript:;" onclick="sub();">保存数据</a>
+                </div>
+            </li>
+        </ul>
+        <input name="deleted" type="hidden" value="0" />
+    </form>
+</div>
+</body>
+<script type="text/javascript">
+    function sub (){
+        var data = $("#subAptitudeForm").serialize();
+        console.log(data);
+        $.ajax({
+            type: 'POST',
+            url: '../../product/add',
+            data: data,
+            dataType: 'json',
+            success: function(data){
+                parent.callBack();
+            },
+            error:function(){
+                $.ligerDialog.error('保存失败');
+            }
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yidusoft.dao.ProductMapper">
+  <resultMap id="BaseResultMap" type="com.yidusoft.domain.Product">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="number" jdbcType="VARCHAR" property="number" />
+    <result column="sam" jdbcType="VARCHAR" property="sam" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="deleted" jdbcType="INTEGER" property="deleted" />
+    <result column="company_oibc" jdbcType="VARCHAR" property="companyOibc" />
+    <result column="introduce" jdbcType="LONGVARCHAR" property="introduce" />
+  </resultMap>
+
+  <select id="getQueryAll" resultMap="BaseResultMap" parameterType="com.yidusoft.domain.Product">
+    SELECT * FROM product WHERE deleted=0
+    <if test="companyOibc != null and companyOibc != ''">
+      AND company_oibc=#{companyOibc}
+    </if>
+
+    <if test="name != null and name != ''">
+      AND name LIKE "%"#{name}"%"
+    </if>
+
+
+
+  </select>
+
+  <update id="deletes" parameterType="String">
+    UPDATE `product` SET `deleted`=1 where product_id =#{id}
+  </update>
+</mapper>

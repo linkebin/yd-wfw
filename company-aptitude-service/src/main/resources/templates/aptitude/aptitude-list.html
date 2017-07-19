@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head lang="en">
+    <meta charset="UTF-8" />
+    <title>企业资质管理</title>
+    <script src="jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <link href="ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="ligerUI/skins/Gray/css/all.css" rel="stylesheet"/>
+
+
+    <script src="ligerUI/js/core/base.js" type="text/javascript"></script>
+    <script src="ligerUI/js/plugins/ligerLayout.js" type="text/javascript"></script>
+    <script src="ligerUI/js/ligerui.all.js" type="text/javascript"></script>
+    <script src="ligerUI/js/plugins/ligerTree.js" type="text/javascript"></script>
+
+    <script src="ligerUI/js/plugins/ligerTab.js" type="text/javascript"></script>
+    <script src="ligerUI/js/plugins/ligerDialog.js" type="text/javascript"></script>
+    <script src="ligerUI/js/plugins/ligerMenu.js" type="text/javascript"></script>
+    <script src="ligerUI/js/plugins/ligerDrag.js" type="text/javascript"></script>
+
+    <link href="ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+    <link href="ligerUI/skins/Gray/css/all.css" rel="stylesheet" type="text/css" />
+    <style type="text/css">
+        .btns{background: grey; width: 30px;height: 20px; margin-left: 10px;}
+    </style>
+    <script src="ligerUI/js/core/init-obj.js" type="text/javascript"></script>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        /*]]>*/
+        var manager = null;
+        var navtab = null;
+        var companyOibc=null;
+        $(function ()
+        {
+
+            $("#layout1").ligerLayout({ leftWidth: 180});
+            $("#tab1").ligerTab();
+            navtab = $("#tab1").ligerGetTabManager();
+            $("#tree8").ligerTree({
+                url:'company/tree',
+                ajaxType:'post',
+                checkbox: false,
+                parentIcon: 'folder',
+                childIcon: 'leaf' ,
+                slide: false, //是否显示动画
+                nodeWidth: 100,
+                idFieldName: 'id',
+                textFieldName:'text' ,
+                onSelect: function (node)
+                {
+                    navtab.removeAll();
+                    companyOibc=node.data.title;
+                    $("#companyOibc").val(node.data.title)
+                    doSearch();
+                }
+            });
+
+            doSearch();
+        });
+
+        function itemclick(item) {
+            var height = $(".l-layout-center").height();
+            var obj = dataGrid.getSelected();
+            if(item.id=='update'){
+                if(obj!=null)
+                f_addTab1(item.id,'修改资质','aptitude/link?id='+obj.aptitudeId,navtab,height);
+                else
+                $.ligerDialog.warn('请选择一行数据');
+
+            }else if(item.id=='add'){
+                f_addTab1(item.id,'添加资质','aptitude/link?id=new',navtab,height);
+            }else if(item.id=='eth'){
+                f_addTab1(item.id,'区块链信息','ethInfo?id='+companyOibc,navtab,height);
+            } else if(item.id=='delete'){
+                f_addTab1(item.id,'区块链信息','ethInfo?id='+companyOibc,navtab,"600");
+            } else {
+                var obj= dataGrid.getSelecteds();
+                if(obj.length>0) {
+                    $.ligerDialog.confirm('确定删除吗？', function (yes){
+                    　if(yes) {
+                            var ids = '';
+                            /*<![CDATA[*/
+                            for (var i = 0; i < obj.length; i++) {
+                                ids += obj[i].aptitudeId + ",";
+                            }
+                            /*]]>*/
+                            $.ajax({
+                                type: 'POST',
+                                url: 'aptitude/delete',
+                                data: {
+                                    ids: ids
+                                },
+                                dataType: 'json',
+                                success: function (data) {
+                                    dataGrid.reload();
+                                }
+                            });
+                        }
+                    });
+                }
+                else{
+                    $.ligerDialog.warn('请选择要删除的数据');
+                }
+            }
+        }
+
+        function callBack()
+        {
+            navtab.removeTabItem('add');
+            navtab.removeTabItem('update');
+            dataGrid.reload();
+            $.ligerDialog.success('保存成功');
+        }
+
+        var dataGrid =null;
+        //加载资质列表
+        function loadDataAptitude(data){
+            dataGrid   =$("#maingrid").ligerGrid({
+                        height: '100%',
+                        columns: [
+                            { display: '企业编号', name: 'code', align: 'left', width: 100, minWidth: 20 },
+                            { display: '企业名称', name: 'companyName',minWidth: 180 },
+                            { display: '资质名称', name: 'name', minWidth: 120 },
+                            { display: '资质编号', name: 'number', minWidth: 140 },
+                            { display: '资质等级', name: 'grade' ,minWidth: 140},
+                            { display: '颁发时间', name: 'issueTime', minWidth: 120 },
+                            { display: '有效时间', name: 'validityTime', minWidth: 140 },
+                            { display: '发证机关', name: 'issuingAuthority'},
+                            { display: '查询网址', name: 'urlQuery', minWidth: 120 },
+                            { display: '持证说明', name: 'explains', minWidth: 140 },
+                            { display: '企业地址', name: 'companyAddress', minWidth: 200 },
+                            { display: '企业法人', name: 'companyLegal', minWidth: 140 },
+                            { display: '企业组织机构代码', name: 'companyOibc',minWidth: 140 },
+                            { display: '创建时间', name: 'createTime', minWidth: 140}
+                        ],
+                        parms:data,
+                        toolbarShowInLeft: false,
+                          rownumbers: true,
+                        toolbar: {
+                            items: [
+
+                                { text: '查看区块链信息', click: itemclick, icon: 'outbox',id:'eth' },
+                                { line: true },
+                                { text: '增加', click: itemclick, icon: 'add',id:'add' },
+                                { line: true },
+                                { text: '修改', click: itemclick, icon: 'modify',id:'update' },
+                                { line: true },
+                                { text: '删除',id:'delete', click: itemclick, img: 'ligerUI/skins/icons/delete.gif' }
+                            ]
+                        },
+                        autoFilter: true,
+                        dataAction:"local",
+                        url:"aptitude/dataList",
+                        usePager:true,
+                        pageSize:"20",//分页页面大小
+                        pageSizeOptions:[10,20,30],//可指定每页页面大小
+                        dateFormat: "yyyy-MM-dd hh:mm:ss"
+                    });
+                      var s=  $(".l-panel-topbarinner .l-toolbar-item:last").find(".l-icon-search2");
+                        if(s.length==1){
+                            $(".l-panel-topbarinner .l-toolbar-item:last").remove();
+                        }
+        }
+      var tabs =null
+        function doSearch(){
+            var data = $("#searchFrom").serializeArray();
+            loadDataAptitude(data);
+        }
+
+        function doReset(){
+            $("#searchFrom")[0].reset();
+        }
+    </script>
+</head>
+<body style="padding:4px">
+<div id="layout1">
+    <div  position="left" title="导航树">
+            <ul id="tree8"></ul>
+    </div>
+    <div  position="center" title="">
+        <form id="searchFrom">
+        <div id="tb" style="padding:3px">
+            <span>企业名称:</span>
+            <input type="text" name="companyName" style="line-height:20px;border:1px solid #ccc" value="" />
+
+            <span>资质名称:</span>
+            <input type="text" name="name" style="line-height:20px;border:1px solid #ccc" value="" />
+
+            <input type="hidden" name="companyOibc" id="companyOibc" value="" />
+            <input type="button" onclick="doSearch()" value="搜索" />
+            <input type="button" onclick="doReset()" value="重置" />
+        </div>
+        </form>
+
+        <div id="tab1" style="width: 100%;overflow:hidden;">
+            <div id="tis" title="数据列表">
+                <div class="l-clear"></div>
+                <div  id="maingrid"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

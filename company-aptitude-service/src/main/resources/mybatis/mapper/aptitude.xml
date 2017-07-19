@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yidusoft.dao.AptitudeDao" >
+
+    <resultMap id="base_column" type="com.yidusoft.domain.Aptitude">
+        <id column="aptitude_id" property="aptitudeId" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="code" property="code" jdbcType="VARCHAR" />
+        <result column="grade" property="grade" jdbcType="VARCHAR" />
+
+        <result column="issue_time" property="issueTime" jdbcType="VARCHAR" />
+        <result column="issuing_authority" property="issuingAuthority" jdbcType="VARCHAR" />
+        <result column="url_query" property="urlQuery" jdbcType="VARCHAR" />
+        <result column="explains" property="explains" jdbcType="VARCHAR" />
+        <result column="company_name" property="companyName" jdbcType="VARCHAR" />
+        <result column="company_address" property="companyAddress" jdbcType="VARCHAR" />
+        <result column="company_legal" property="companyLegal" jdbcType="VARCHAR" />
+        <result column="company_oibc" property="companyOibc" jdbcType="VARCHAR" />
+        <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="DATE" />
+    </resultMap>
+    <select id="getQueryAll" resultMap="base_column" parameterType="com.yidusoft.domain.Aptitude">
+          SELECT * FROM aptitude WHERE deleted=0
+        <if test="companyOibc != null and companyOibc != ''">
+            AND company_oibc=#{companyOibc}
+        </if>
+
+        <if test="name != null and name != ''">
+            AND name LIKE "%"#{name}"%"
+        </if>
+
+        <if test="companyName != null and companyName != ''">
+            AND company_name LIKE  "%"#{companyName}"%"
+        </if>
+
+
+        ORDER BY  issue_time DESC
+    </select>
+
+    <insert id="insert" parameterType="com.yidusoft.domain.Aptitude">
+        INSERT INTO aptitude
+       (name,number,grade,issue_time,validity_time,issuing_authority,url_query,explains,
+				company_name,company_address,
+				company_legal,company_oibc,create_time,deleted)
+
+        VALUES
+        (#{name},#{number}, #{grade},#{issueTime}, #{validityTime},
+				 #{issuingAuthority}, #{urlQuery},#{explains}, #{companyName},#{companyAddress}, #{companyLegal},
+				 #{companyOibc}, #{createTime},#{deleted})
+    </insert>
+
+    <update id="update" parameterType="com.yidusoft.domain.Aptitude">
+          UPDATE `aptitude`
+             SET `name`=#{name}, `number`=#{number}, `grade`=#{grade},
+
+            `issue_time`=#{issueTime}, `validity_time`=#{validityTime}, `issuing_authority`=#{issuingAuthority},
+
+            `url_query`=#{urlQuery}, `explains`=#{explains}, `company_name`=#{companyName},
+
+            `company_address`=#{companyAddress}, `company_legal`=#{companyLegal},
+
+            `company_oibc`=#{companyOibc}, `create_time`=#{createTime}, `deleted`=#{deleted}
+
+            WHERE (`aptitude_id`=#{aptitudeId})
+    </update>
+
+    <select id="getById" parameterType="String" resultType="com.yidusoft.domain.Aptitude">
+        SELECT * from aptitude WHERE deleted=0 AND aptitude_id=#{id}
+    </select>
+
+    <update id="delete" parameterType="String">
+        UPDATE `aptitude` SET `deleted`=1 WHERE (`aptitude_id`=#{aptitudeId})
+    </update>
+
+</mapper>

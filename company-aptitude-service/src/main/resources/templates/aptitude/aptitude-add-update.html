@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title></title>
+    <script src="../jquery/jquery-1.9.0.min.js" type="text/javascript"></script>
+    <link href="../ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+    <link href="../ligerUI/skins/Gray/css/all.css" rel="stylesheet"/>
+    <script src="../ligerUI/js/ligerui.all.js" type="text/javascript"></script>
+    <style type="text/css">
+        .btn{width: 60px; height: 25px; background: #89A8E3;
+            text-align: center; margin: 20px auto; border-radius: 2px; position: relative;}
+        .btn a{color: #000000; font-size: 12px; line-height: 25px;text-decoration:none;}
+        .fie li{width: 49%; float: left; margin-top: 8px;}
+    </style>
+</head>
+<body>
+<div style="margin-left: 5px;">
+
+    <!--修改-->
+    <form id="subAptitudeForm" th:if="${aptitude!=null}" th:object="${aptitude}">
+        <ul class="fie">
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">资质名称：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="name" style="width: 300px;" th:value="*{name}"  /></li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">资质编号：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="number" style="width: 300px;" th:value="*{number}" /></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">资质等级：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="grade" style="width: 300px;" th:value="*{grade}" /></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">颁发时间：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="issueTime" style="width: 300px;" th:value="*{issueTime}" /></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">有效时间：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="validityTime" style="width: 300px;" th:value="*{validityTime}" /></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">发证机关：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="issuingAuthority" style="width: 300px;" th:value="*{issuingAuthority}" /></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 90px; ">查询网址：</li>
+                    <li style="width: 250px; "><input type="text"  name="urlQuery" style="width: 300px;"  th:value="*{urlQuery}"/></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">企业名称：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="companyName" style="width: 300px;" th:value="*{companyName}" /></li>
+                </ul>
+            </li>
+
+            <li style="width: 100%;">
+                <ul>
+                    <li style="width: 90px; ">资质说明：</li>
+                    <li style="width: 300px;">
+                        <textarea name="explains" cols="123" rows="6" th:text="*{explains}" ></textarea></li>
+                </ul>
+            </li>
+
+
+
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">企业机构代码：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="companyOibc" style="width: 300px;" th:value="*{companyOibc}" /></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">企业法人：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="companyLegal" style="width: 300px;" th:value="*{companyLegal}" /></li>
+                </ul>
+            </li>
+
+
+            <li style="width: 100%;">
+                <ul>
+                    <li style="width: 90px; float: left;">企业地址：</li>
+                    <li style="width: 250px; float: left;">
+                        <input type="text"  name="companyAddress" style="width: 757px;" th:value="*{companyAddress}"  /></li>
+                </ul>
+            </li>
+
+            <li style="width: 100%;">
+                <div class="btn">
+                    <a href="javascript:;" onclick="sub();">保存数据</a>
+                </div>
+            </li>
+        </ul>
+        <input name="deleted" type="hidden" th:value="*{deleted}" />
+        <input name="createTime" type="hidden" th:value="*{createTime}" />
+        <input name="aptitudeId" type="hidden" th:value="*{aptitudeId}" />
+        <input name="code" type="hidden" th:value="*{code}" />
+    </form>
+
+    <!--添加-->
+    <form id="subAptitudeForm" th:if="${aptitude==null}">
+        <ul class="fie">
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">资质名称：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="name" style="width: 300px;"   /></li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">资质编号：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="number" style="width: 300px;"  /></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">资质等级：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="grade" style="width: 300px;"  /></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">颁发时间：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="issueTime" style="width: 300px;"  /></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">有效时间：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="validityTime" style="width: 300px;"  /></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">发证机关：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="issuingAuthority" style="width: 300px;"  /></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 90px; ">查询网址：</li>
+                    <li style="width: 250px; "><input type="text"  name="urlQuery" style="width: 300px;"  /></li>
+                </ul>
+            </li>
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">企业名称：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="companyName" style="width: 300px;"  /></li>
+                </ul>
+            </li>
+            <li style="width: 100%;">
+                <ul>
+                    <li style="width: 90px; ">资质说明：</li>
+                    <li style="width: 300px;">
+                        <textarea name="explains" cols="123" rows="6" ></textarea></li>
+                </ul>
+            </li>
+
+
+
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">企业机构代码：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="companyOibc" style="width: 300px;"  /></li>
+                </ul>
+            </li>
+
+            <li>
+                <ul>
+                    <li style="width: 90px; float: left;">企业法人：</li>
+                    <li style="width: 250px; float: left;"><input type="text"  name="companyLegal" style="width: 300px;"  /></li>
+                </ul>
+            </li>
+
+            <li style="width: 100%;">
+                <ul>
+                    <li style="width: 90px; float: left;">企业地址：</li>
+                    <li style="width: 250px; float: left;">
+                        <input type="text"  name="companyAddress" style="width: 757px;"  /></li>
+                </ul>
+            </li>
+            <li style="width: 100%;">
+                <div class="btn">
+                    <a href="javascript:;" onclick="sub();">保存数据</a>
+                </div>
+            </li>
+        </ul>
+        <input name="deleted" type="hidden" value="0" />
+    </form>
+
+</div>
+
+
+</body>
+<script type="text/javascript">
+    function sub (){
+        var data = $("#subAptitudeForm").serialize();
+        console.log(data);
+        console.log(data);
+        $.ajax({
+            type: 'POST',
+            url: 'save',
+            data: data,
+            dataType: 'json',
+            success: function(data){
+                parent.callBack();
+            },
+            error:function(e){
+                $.ligerDialog.error('保存失败');
+            }
+        });
+    }
+</script>
+</html>

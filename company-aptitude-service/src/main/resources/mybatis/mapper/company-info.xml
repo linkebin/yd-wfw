@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yidusoft.dao.CompanyInfoDao" >
+
+    <resultMap id="CompanyInfo" type="com.yidusoft.domain.CompanyInfo" >
+        <id column="company_id" property="companyId" jdbcType="INTEGER" />
+        <result column="oibc" property="oibc" jdbcType="VARCHAR" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="principal" property="principal" jdbcType="VARCHAR" />
+        <result column="legal" property="legal" jdbcType="VARCHAR" />
+        <result column="legal_id_number" property="legalIdNumber" jdbcType="VARCHAR" />
+        <result column="sign_capital" property="signCapital" jdbcType="VARCHAR" />
+        <result column="license_number" property="licenseNumber" jdbcType="VARCHAR" />
+        <result column="type" property="type" jdbcType="VARCHAR" />
+        <result column="phone" property="phone" jdbcType="VARCHAR" />
+        <result column="email" property="email" jdbcType="VARCHAR" />
+        <result column="fax" property="fax" jdbcType="VARCHAR" />
+        <result column="postalcode" property="postalcode" jdbcType="VARCHAR" />
+        <result column="address" property="address" jdbcType="VARCHAR" />
+        <result column="found_time" property="foundTime" jdbcType="VARCHAR" />
+        <result column="deleted" property="deleted" jdbcType="VARCHAR" />
+        <result column="create_time" property="createTime" jdbcType="DATE" />
+    </resultMap>
+    <resultMap id="tree_map" type="com.yidusoft.domain.json.Node">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="text" property="text" jdbcType="VARCHAR" />
+        <result column="title" property="title" jdbcType="VARCHAR" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        company_id,oibc,name,principal,legal,legal_id_number,sign_capital,license_number,
+        type,phone,email,fax,postalcode,address,found_time,deleted,create_time
+    </sql>
+
+    <select id="getTree" resultMap="tree_map">
+            SELECT company_id id,`name` text,oibc title FROM company_info WHERE deleted=0
+    </select>
+
+    <select id="getAll" resultMap="CompanyInfo" parameterType="com.yidusoft.domain.CompanyInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM COMPANY_INFO WHERE deleted =0
+        <if test="name != null and name != ''">
+            AND name LIKE "%"#{name}"%"
+        </if>
+        <if test="type != null and type != ''">
+            AND type LIKE "%"#{type}"%"
+        </if>
+    </select>
+
+    <select id="getOne" parameterType="java.lang.String" resultMap="CompanyInfo">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM COMPANY_INFO
+        WHERE company_id = #{companyId}
+    </select>
+
+    <insert id="insert" parameterType="CompanyInfo" >
+        INSERT INTO
+        COMPANY_INFO
+        (company_id,oibc,name,principal,legal,legal_id_number,sign_capital,license_number,
+        type,phone,email,fax,postalcode,address,found_time,deleted,create_time)
+        VALUES
+        (#{companyId},#{oibc},#{name},#{principal},#{legal},#{legalIdNumber},#{signCapital},#{licenseNumber},
+        #{type},#{phone},#{email},#{fax},#{postalcode},#{address},#{foundTime},#{deleted},#{createTime}
+        )
+    </insert>
+
+    <update id="update" parameterType="CompanyInfo">
+            UPDATE
+            company_info
+            SET
+            oibc = #{oibc},
+            name = #{name},
+            principal = #{principal},
+            legal = #{legal},
+            legal_id_number = #{legalIdNumber},
+            sign_capital = #{signCapital},
+            license_number = #{licenseNumber},
+            type = #{type},
+            phone = #{phone},
+            email = #{email},
+            fax = #{fax},
+            postalcode = #{postalcode},
+            address = #{address},
+            found_time = #{foundTime},
+            deleted = #{deleted},
+            create_time = #{createTime}
+            WHERE
+            company_id = #{companyId}
+    </update>
+
+    <delete id="delete" parameterType="java.lang.String" >
+        UPDATE COMPANY_INFO SET deleted=1 WHERE company_id =#{companyId}
+    </delete>
+
+    <select id="checkLike" parameterType="java.lang.String" resultMap="CompanyInfo">
+        SELECT
+        *
+        FROM COMPANY_INFO
+        WHERE deleted =0 AND name LIKE #{name}
+    </select>
+</mapper>

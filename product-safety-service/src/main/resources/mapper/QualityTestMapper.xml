@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yidusoft.dao.QualityTestMapper">
+  <resultMap id="BaseResultMap" type="com.yidusoft.domain.QualityTest">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="quality_test_id" jdbcType="VARCHAR" property="qualityTestId" />
+    <result column="test_item" jdbcType="VARCHAR" property="testItem" />
+    <result column="explains" jdbcType="VARCHAR" property="explains" />
+    <result column="detection_time" jdbcType="VARCHAR" property="detectionTime" />
+    <result column="detetion_auth" jdbcType="VARCHAR" property="detetionAuth" />
+    <result column="standard" jdbcType="VARCHAR" property="standard" />
+    <result column="results" jdbcType="VARCHAR" property="results" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="deleted" jdbcType="INTEGER" property="deleted" />
+    <result column="product_id" jdbcType="VARCHAR" property="productId" />
+  </resultMap>
+
+  <update id="updateDelete" parameterType="String">
+      UPDATE quality_test SET deleted=1 WHERE quality_test_id = #{qualityTestId}
+  </update>
+
+  <select id="getAll" resultMap="BaseResultMap" parameterType="com.yidusoft.domain.QualityTest">
+      SELECT qt.*,p.name FROM quality_test qt,product p WHERE qt.deleted=0
+    AND p.deleted=0 AND qt.product_id=p.product_id
+      <if test="productId !=null and productId !=''">
+        AND qt.product_id=#{productId}
+      </if>
+      <if test="testItem !=null and testItem !=''">
+        AND qt.test_item LIKE "%"#{testItem}"%"
+      </if>
+      <if test="detetionAuth !=null and detetionAuth !=''">
+        AND qt.detetion_auth LIKE "%"#{detetionAuth}"%"
+      </if>
+    <if test="results !=null and results !=''">
+      AND qt.results LIKE "%"#{results}"%"
+    </if>
+  </select>
+
+  <resultMap id="tree_map" type="com.yidusoft.domain.Tree">
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="text" property="text" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getProduct" resultMap="tree_map">
+    SELECT product_id id,`name` text,company_oibc title FROM product WHERE deleted=0
+  </select>
+</mapper>

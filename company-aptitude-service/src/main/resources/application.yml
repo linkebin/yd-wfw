@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: company-aptitude-service
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://192.168.1.37/yd_wfw?useUnicode=true&characterEncoding=UTF-8
+    username: yd_wfw
+    password: yd_wfw
+
+server:
+  port: 8002
+
+eureka:
+  client:
+   serviceUrl:
+         defaultZone: http://localhost:8001/eureka/
+mybatis:
+  config-location: classpath:mybatis/mybatis-config.xml
+  mapper-locations: classpath:mybatis/mapper/*.xml
+  type-aliases-package: com.yidusoft.domain

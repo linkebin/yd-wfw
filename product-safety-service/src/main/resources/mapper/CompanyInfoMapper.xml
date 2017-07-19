@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.yidusoft.dao.CompanyInfoMapper">
+  <resultMap id="BaseResultMap" type="com.yidusoft.domain.CompanyInfo">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="company_id" jdbcType="INTEGER" property="companyId" />
+    <result column="oibc" jdbcType="VARCHAR" property="oibc" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="principal" jdbcType="VARCHAR" property="principal" />
+    <result column="legal" jdbcType="VARCHAR" property="legal" />
+    <result column="legal_id_number" jdbcType="VARCHAR" property="legalIdNumber" />
+    <result column="sign_capital" jdbcType="VARCHAR" property="signCapital" />
+    <result column="license_number" jdbcType="VARCHAR" property="licenseNumber" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="fax" jdbcType="VARCHAR" property="fax" />
+    <result column="postalcode" jdbcType="VARCHAR" property="postalcode" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="found_time" jdbcType="VARCHAR" property="foundTime" />
+    <result column="deleted" jdbcType="INTEGER" property="deleted" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+  </resultMap>
+
+  <resultMap id="tree_map" type="com.yidusoft.domain.Node">
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="text" property="text" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <select id="getTree" resultMap="tree_map">
+    SELECT company_id id,`name` text,oibc title FROM company_info WHERE deleted=0
+  </select>
+
+  <select id="getCompanyTree" resultMap="tree_map">
+    SELECT `name` text,oibc title FROM company_info WHERE deleted=0
+  </select>
+</mapper>
